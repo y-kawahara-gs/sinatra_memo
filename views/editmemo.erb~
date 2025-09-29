@@ -6,7 +6,7 @@
       <input type="text" name="title" value="<%= @memo['title'] %>">
     </div>
     <div>
-      <textarea name="content" rows="5"><%= @memo['content'] %></textarea>
+      <textarea name="content" cows="5"><%= @memo['content'] %></textarea>
     </div>
     <div>
       <input type="submit" value="変更">
