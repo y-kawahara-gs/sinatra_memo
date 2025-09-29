@@ -68,7 +68,8 @@
 <img width="356" height="342" alt="image" src="https://github.com/user-attachments/assets/59121175-7bbe-4498-9c93-e8140e1e21cb" />
 
 - 変更ボタンを押すと内容を更新することができる
-<img width="415" height="362" alt="image" src="https://github.com/user-attachments/assets/164a5678-4a17-4ffd-8625-94c6cb2249af" />
+<img width="339" height="357" alt="image" src="https://github.com/user-attachments/assets/92537073-fcd7-44d1-8063-e98661708cf9" />
+
 <img width="396" height="390" alt="image" src="https://github.com/user-attachments/assets/3b807950-deef-4f96-a119-b68a0c2d399a" />
 
 - 削除ボタンを押すと、そのメモがリストから消去される
