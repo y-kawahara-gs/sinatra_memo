@@ -17,7 +17,7 @@
   - bundlerのインストール
     sinatra\_memoフォルダにGemfileがあるのを確認し、以下のコマンドでインストール
     ```sh
-    bundle install --path vendor/bundle
+    bundle install
     ```
 ## 実行方法
 1. クローンする
