@@ -21,7 +21,7 @@ post '/' do
   File.open('data.json') do |file|
     @all_memos = JSON.parse(file.read)
   end
-  if @all_memos == {}
+  if @all_memos.empty?
     hash = { '1' => { 'title' => params[:title], 'content' => params[:content] } }
   else
     key = @all_memos.to_a.last[0]
