@@ -4,20 +4,13 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'json'
 require 'cgi'
+if !File.exist?('data.json') || File.zero?('data.json')
+  File.open('data.json', 'w') do |file|
+    JSON.dump({}, file)
+  end
+end
 
 get '/' do
-  if File.exist?('data.json')
-    if File.read('data.json') == ''
-      File.open('data.json', 'w') do |file|
-        JSON.dump({}, file)
-      end
-    end
-  else
-    File.open('data.json', 'w') do |file|
-      JSON.dump({}, file)
-    end
-  end
-
   File.open('data.json', 'r') do |file|
     @hash = JSON.parse(file.read)
   end
