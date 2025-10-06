@@ -21,13 +21,12 @@ post '/' do
   File.open('data.json') do |file|
     @all_memos = JSON.parse(file.read)
   end
-  if @all_memos.empty?
-    hash = { '1' => params.slice(:title, :content) }
-  else
-    key = @all_memos.to_a.last[0]
-    id = (key.to_i + 1).to_s
-    hash = @all_memos.merge(id => params.slice(:title, :content) )
-  end
+  id = if @all_memos.empty?
+         '1'
+       else
+         id = (@all_memos.keys.last.to_i + 1).to_s
+       end
+  hash = @all_memos.merge(id => params.slice(:title, :content) )
 
   File.open('data.json', 'w') do |file|
     JSON.dump(hash, file)
