@@ -22,11 +22,11 @@ post '/' do
     @all_memos = JSON.parse(file.read)
   end
   if @all_memos.empty?
-    hash = { '1' => { 'title' => params[:title], 'content' => params[:content] } }
+    hash = { '1' => params.slice(:title, :content) }
   else
     key = @all_memos.to_a.last[0]
     id = (key.to_i + 1).to_s
-    hash = @all_memos.merge(id => { 'title' => params[:title], 'content' => params[:content] })
+    hash = @all_memos.merge(id => params.slice(:title, :content) )
   end
 
   File.open('data.json', 'w') do |file|
