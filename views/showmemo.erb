@@ -1,9 +1,8 @@
 <div>
-  <h1>メモアプリ</h1>
   <p><%= CGI.escapeHTML(@memo["title"]) %></p>
   <p><%= CGI.escapeHTML(@memo["content"]) %></p>
   <input type="button" onclick="location.href='/editmemo/<%= @id %>'" value="変更">
-  <form action="/<%= @id %>" method="post">
+  <form action="/<%= @id %>" method="POST">
     <div>
       <input type="hidden" name="_method" value="DELETE">
       <input type="submit" value="削除">
