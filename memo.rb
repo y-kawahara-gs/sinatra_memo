@@ -12,21 +12,21 @@ end
 
 get '/' do
   File.open('data.json', 'r') do |file|
-    @hash = JSON.parse(file.read)
+    @all_memos = JSON.parse(file.read)
   end
   erb :index
 end
 
 post '/' do
   File.open('data.json') do |file|
-    @hash = JSON.parse(file.read)
+    @all_memos = JSON.parse(file.read)
   end
-  if @hash == {}
+  if @all_memos == {}
     hash = { '1' => { 'title' => params[:title], 'content' => params[:content] } }
   else
-    key = @hash.to_a.last[0]
+    key = @all_memos.to_a.last[0]
     id = (key.to_i + 1).to_s
-    hash = @hash.merge(id => { 'title' => params[:title], 'content' => params[:content] })
+    hash = @all_memos.merge(id => { 'title' => params[:title], 'content' => params[:content] })
   end
 
   File.open('data.json', 'w') do |file|
@@ -37,9 +37,9 @@ end
 
 delete '/*' do |id|
   File.open('data.json') do |file|
-    @hash = JSON.parse(file.read)
+    @all_memos = JSON.parse(file.read)
   end
-  hash = @hash
+  hash = @all_memos
   hash.delete(id)
 
   File.open('data.json', 'w') do |file|
@@ -50,9 +50,9 @@ end
 
 patch '/*' do |id|
   File.open('data.json') do |file|
-    @hash = JSON.parse(file.read)
+    @all_memos = JSON.parse(file.read)
   end
-  hash = @hash
+  hash = @all_memos
   hash[id]['title'] = params[:title]
   hash[id]['content'] = params[:content]
 
