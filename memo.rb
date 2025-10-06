@@ -4,6 +4,29 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'json'
 require 'cgi'
+
+def get_all_memos
+  File.open('data.json') do |file|
+    @all_memos = JSON.parse(file.read)
+  end
+end
+
+def get_memo(id)
+  @id = id
+  File.open('data.json') do |file|
+    memo = JSON.parse(file.read)
+    @memo = memo[params[:id]]
+  end
+end
+
+
+def update_all_memos(hash)
+  File.open('data.json', 'w') do |file|
+    JSON.dump(hash, file)
+  end
+  redirect to '/'
+end
+
 if !File.exist?('data.json') || File.zero?('data.json')
   File.open('data.json', 'w') do |file|
     JSON.dump({}, file)
@@ -11,16 +34,12 @@ if !File.exist?('data.json') || File.zero?('data.json')
 end
 
 get '/' do
-  File.open('data.json', 'r') do |file|
-    @all_memos = JSON.parse(file.read)
-  end
+  get_all_memos
   erb :index
 end
 
 post '/' do
-  File.open('data.json') do |file|
-    @all_memos = JSON.parse(file.read)
-  end
+  get_all_memos
   id = if @all_memos.empty?
          '1'
        else
@@ -28,46 +47,28 @@ post '/' do
        end
   hash = @all_memos.merge(id => params.slice(:title, :content) )
 
-  File.open('data.json', 'w') do |file|
-    JSON.dump(hash, file)
-  end
-  redirect to '/'
+  update_all_memos(hash)
 end
 
 delete '/*' do |id|
-  File.open('data.json') do |file|
-    @all_memos = JSON.parse(file.read)
-  end
+  get_all_memos
   hash = @all_memos
   hash.delete(id)
 
-  File.open('data.json', 'w') do |file|
-    JSON.dump(hash, file)
-  end
-  redirect to '/'
+  update_all_memos(hash)
 end
 
 patch '/*' do |id|
-  File.open('data.json') do |file|
-    @all_memos = JSON.parse(file.read)
-  end
+  get_all_memos
   hash = @all_memos
   hash[id]['title'] = params[:title]
   hash[id]['content'] = params[:content]
 
-  File.open('data.json', 'w') do |file|
-    JSON.dump(hash, file)
-  end
-  redirect to '/'
+  update_all_memos(hash)
 end
 
 get '/showmemo/:id' do |id|
-  @id = id
-  File.open('data.json') do |file|
-    memo = JSON.parse(file.read)
-    @memo = memo[params[:id]]
-  end
-
+  get_memo(id)
   erb :showmemo
 end
 
@@ -76,11 +77,6 @@ get '/newmemo' do
 end
 
 get '/editmemo/:id' do |id|
-  @id = id
-  File.open('data.json') do |file|
-    memo = JSON.parse(file.read)
-    @memo = memo[params[:id]]
-  end
-
+  get_memo(id)
   erb :editmemo
 end
