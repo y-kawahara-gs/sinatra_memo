@@ -15,20 +15,7 @@
   ```
 - gem
   - bundlerのインストール
-    ```sh
-    $ gem install bundler
-    ```
-  - sinatra・sinatra-contribのインストール
-    1. Gemfileを以下のコマンドで作成します。
-      ```sh
-      $ bundle init
-      ```
-    2. Gemfileに以下を記述
-     ```gem
-     gem "sinatra"
-     gem "sinatra-contrib"
-     ```  
-    3.  Gemfileを保存して、以下のコマンドでインストール
+    sinatra\_memoフォルダにGemfileがあるのを確認し、以下のコマンドでインストール
     ```sh
     bundle install --path vendor/bundle
     ```
