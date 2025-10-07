@@ -1,0 +1,13 @@
+<div>
+  <input type="button" onclick="location.href='./newmemo'" value="追加">
+  <ul>
+    <% @memos.each do |id, value| %>
+      <li>
+        <a href='./showmemo/<%= id %>'>
+          <%= CGI.escapeHTML(value["title"]) %>
+
+        </a>
+      </li>
+    <% end %>
+  </ul>
+</div>
