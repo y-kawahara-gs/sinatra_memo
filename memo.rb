@@ -5,9 +5,9 @@ require 'sinatra/reloader'
 require 'json'
 require 'cgi'
 
-def load_all_memos
+def load_memos
   File.open('data.json') do |file|
-    @all_memos = JSON.parse(file.read)
+    @memos = JSON.parse(file.read)
   end
 end
 
@@ -35,33 +35,33 @@ configure do
 end
 
 get '/' do
-  load_all_memos
+  load_memos
   erb :index
 end
 
 post '/' do
-  load_all_memos
-  id = if @all_memos.empty?
+  load_memos
+  id = if @memos.empty?
          '1'
        else
-         (@all_memos.keys.last.to_i + 1).to_s
+         (@memos.keys.last.to_i + 1).to_s
        end
-  hash = @all_memos.merge(id => params.slice(:title, :content))
+  hash = @memos.merge(id => params.slice(:title, :content))
 
   update_all_memos(hash)
 end
 
 delete '/*' do |id|
   get_all_memos
-  hash = @all_memos
+  hash = @memos
   hash.delete(id)
 
   update_all_memos(hash)
 end
 
 patch '/*' do |id|
-  load_all_memos
-  hash = @all_memos
+  load_memos
+  hash = @memos
   hash[id]['title'] = params[:title]
   hash[id]['content'] = params[:content]
 
