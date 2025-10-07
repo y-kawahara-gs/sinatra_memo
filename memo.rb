@@ -26,9 +26,11 @@ def update_all_memos(hash)
   redirect to '/'
 end
 
-if !File.exist?('data.json') || File.zero?('data.json')
-  File.open('data.json', 'w') do |file|
-    JSON.dump({}, file)
+configure do
+  if !File.exist?('data.json') || File.zero?('data.json')
+    File.open('data.json', 'w') do |file|
+      JSON.dump({}, file)
+    end
   end
 end
 
