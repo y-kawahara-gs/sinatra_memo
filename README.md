@@ -72,6 +72,7 @@ https://computingforgeeks.com/how-to-install-postgresql-16-on-debian/
   ```
 2. 実行前のpostgreSQL
 	- テーブルは無い状態を確認
+
 	  <img width="556" height="232" alt="image" src="https://github.com/user-attachments/assets/a5c44a73-ca12-4020-9063-6603fe7e92a1" />
 
 3. memo.rbの実行
@@ -79,9 +80,10 @@ https://computingforgeeks.com/how-to-install-postgresql-16-on-debian/
     ```sh
     bundle exec ruby memo.rb
     ```
-3. 実行画面
+4. 実行画面
 
 - ターミナル
+
   <img width="581" height="240" alt="image" src="https://github.com/user-attachments/assets/f7483859-d425-4887-b0a3-4a22950ae6e1" />
 
   
@@ -136,4 +138,3 @@ https://computingforgeeks.com/how-to-install-postgresql-16-on-debian/
 - またそれぞれの処理でデータベースも同様に動くことが確認できる
   
 	<img width="521" height="189" alt="image" src="https://github.com/user-attachments/assets/290f9746-984d-4462-ae37-a609a3442b05" />
-
