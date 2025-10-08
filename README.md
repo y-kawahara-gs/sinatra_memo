@@ -87,46 +87,53 @@ https://computingforgeeks.com/how-to-install-postgresql-16-on-debian/
   
 - ブラウザ
   - 実行中に http://127.0.0.1:4567 にブラウザでアクセス
+  
 	<img width="556" height="430" alt="image" src="https://github.com/user-attachments/assets/e6ed5a67-2c01-4f05-aae6-1cf4ec594927" />
 
 - 起動時にテーブルも自動で作成される
+
 	<img width="552" height="362" alt="image" src="https://github.com/user-attachments/assets/957172e9-4ecc-46fe-a82e-a118a061eddf" />
 
 ## 使い方
 
-
 - 追加ボタンを押すと、内容を記述する画面に遷移する
+  
 	<img width="476" height="359" alt="image" src="https://github.com/user-attachments/assets/305200bd-7a85-4eaf-afdf-849676acb5a2" />
 
 
 - 記入し、保存ボタンを押すと、タイトルがリストに追加される
+  
 	<img width="457" height="368" alt="image" src="https://github.com/user-attachments/assets/ad293ca5-dabd-4ba7-9f37-9fb935a93d23" />
 
 
 - このときPostgreSQLもデータが作成されている
+  
 	<img width="532" height="162" alt="image" src="https://github.com/user-attachments/assets/c3a33693-bd07-4a54-8a09-d9f2497c3dc4" />
 
 
 - 同様にメモを作成することができる
+  
 	<img width="435" height="368" alt="image" src="https://github.com/user-attachments/assets/92c88779-f1b0-4821-8a0f-ac6e2916648c" />
 
 
 - リストのタイトルをクリックすると、そのタイトルのメモの中身を見ることができる
+
 	<img width="394" height="343" alt="image" src="https://github.com/user-attachments/assets/4a2db30b-e3b5-4185-8573-4a3defd429be" />
 
 
 - 変更ボタンを押すと内容を更新することができ、序列は下に移動する
-	<img width="422" height="342" alt="image" src="https://github.com/user-attachments/assets/c2e23da3-e2b6-4d3f-9302-edbff86e3cf0" />
 
-
-	<img width="305" height="297" alt="image" src="https://github.com/user-attachments/assets/3965086f-7385-419b-9dac-9a121f85dfd2" />
-
+	<img width="422" height="342" alt="image" src="https://github.com/user-attachments/assets/c2e23da3-e2b6-4d3f-9302-edbff86e3cf0" /><br>
+	
+	<img width="305" height="297" alt="image" src="https://github.com/user-attachments/assets/3965086f-7385-419b-9dac-9a121f85dfd2" /><br>
 
 - 削除ボタンを押すと、そのメモがリストから消去される
-	<img width="403" height="338" alt="image" src="https://github.com/user-attachments/assets/24af6262-2365-42f1-9b7f-d1d3b87a799e" />
+  
+	<img width="403" height="338" alt="image" src="https://github.com/user-attachments/assets/24af6262-2365-42f1-9b7f-d1d3b87a799e" /><br>
 
-	<img width="424" height="391" alt="image" src="https://github.com/user-attachments/assets/4527ddba-6487-4a76-8e08-c3c67d54cc94" />
+	<img width="424" height="391" alt="image" src="https://github.com/user-attachments/assets/4527ddba-6487-4a76-8e08-c3c67d54cc94" /><br>
 
 - またそれぞれの処理でデータベースも同様に動くことが確認できる
+  
 	<img width="521" height="189" alt="image" src="https://github.com/user-attachments/assets/290f9746-984d-4462-ae37-a609a3442b05" />
 
