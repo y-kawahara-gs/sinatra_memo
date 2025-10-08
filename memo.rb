@@ -2,74 +2,66 @@
 
 require 'sinatra'
 require 'sinatra/reloader'
-require 'json'
+require 'pg'
 require 'cgi'
 
-def load_memos
-  File.open('data.json') do |file|
-    @memos = JSON.parse(file.read)
-  end
-end
-
-def get_memo(id)
-  @id = id
-  File.open('data.json') do |file|
-    memo = JSON.parse(file.read)
-    @memo = memo[params[:id]]
-  end
-end
-
-def update_all_memos(hash)
-  File.open('data.json', 'w') do |file|
-    JSON.dump(hash, file)
-  end
-  redirect to '/'
+def conn
+  @conn ||= PG.connect(dbname: 'sinatra_memo')
 end
 
 configure do
-  if !File.exist?('data.json') || File.zero?('data.json')
-    File.open('data.json', 'w') do |file|
-      JSON.dump({}, file)
-    end
-  end
+  result = conn.exec("SELECT * FROM information_schema.tables WHERE table_name = 'memos'")
+  conn.exec('CREATE TABLE memos (id serial primary key, title varchar(255), content text)') if result.values.empty?
+end
+
+def load_memos
+  conn.exec('SELECT * FROM memos')
+end
+
+def post_memo(title, content)
+  conn.exec_params('INSERT INTO memos(title, content) VALUES ($1, $2);', [title, content])
+end
+
+def delete_memo(id)
+  conn.exec_params('DELETE FROM memos WHERE id = $1;', [id])
+end
+
+def update_memo(title, content, id)
+  conn.exec_params('UPDATE memos SET title = $1, content = $2 WHERE id = $3', [title, content, id])
+end
+
+def get_memo(id)
+  result = conn.exec_params('SELECT * FROM memos WHERE id = $1;', [id])
+  result.tuple_values(0)
 end
 
 get '/' do
-  load_memos
+  @memos = load_memos
   erb :index
 end
 
 post '/' do
-  load_memos
-  id = if @memos.empty?
-         '1'
-       else
-         (@memos.keys.last.to_i + 1).to_s
-       end
-  hash = @memos.merge(id => params.slice(:title, :content))
-
-  update_all_memos(hash)
+  title = params[:title]
+  content = params[:content]
+  post_memo(title, content)
+  redirect '/'
 end
 
-delete '/*' do |id|
-  get_all_memos
-  hash = @memos
-  hash.delete(id)
-
-  update_all_memos(hash)
+delete '/showmemo/*' do |id|
+  delete_memo(id)
+  redirect '/'
 end
 
-patch '/*' do |id|
-  load_memos
-  hash = @memos
-  hash[id]['title'] = params[:title]
-  hash[id]['content'] = params[:content]
-
-  update_all_memos(hash)
+patch '/showmemo/*' do |id|
+  title = params[:title]
+  content = params[:content]
+  update_memo(title, content, id)
+  redirect '/'
 end
 
 get '/showmemo/:id' do |id|
-  get_memo(id)
+  memo = get_memo(id)
+  @id, @title, @content = memo
   erb :showmemo
 end
 
@@ -78,6 +70,7 @@ get '/newmemo' do
 end
 
 get '/editmemo/:id' do |id|
-  get_memo(id)
+  memo = get_memo(id)
+  @id, @title, @content = memo
   erb :editmemo
 end
