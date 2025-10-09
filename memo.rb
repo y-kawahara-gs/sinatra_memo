@@ -15,7 +15,7 @@ configure do
 end
 
 def load_memos
-  conn.exec('SELECT * FROM memos')
+  conn.exec('SELECT * FROM memos ORDER BY id ')
 end
 
 def post_memo(title, content)
