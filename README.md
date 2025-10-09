@@ -7,8 +7,13 @@
   - bundler
   - sinatra
   - sinatra-contrib
+  - cgi
+  - dotenv
+  - rackup
+  - puma
 
 ## 準備方法
+### Rubyとライブラリの設定
 - Rubyのインストール（Debianの例）
   ```sh
   $ sudo apt-get install ruby-full
@@ -19,53 +24,154 @@
     ```sh
     bundle install
     ```
+
+### PostgreSQLとデータベースの設定
+
+### PostgreSQLのインストール
+こちらを参照
+https://computingforgeeks.com/how-to-install-postgresql-16-on-debian/
+
+### データベースの設定
+- postgreSQLに接続
+	```sh
+	sudo -u postgres psql
+	```
+- ユーザを作成（作成後、\duで確認できる）
+	ユーザ名にハイフンを使用する際はクォーテーションで囲む
+	```SQL
+	postgres=# CREATE ROLE "y-kawahara" WITH LOGIN PASSWORD 'password';
+	```
+- データベースの作成
+	1. 新しいデータベースの作成（\lで確認できる）
+		```SQL
+		postgres=# CREATE DATABASE sinatra_memo（データベース名）;
+		```
+	2. 作成したデータベースにユーザのアクセス権を付与
+		```SQL
+		postgres=# GRANT ALL PRIVATES ON DATABASE sinatra_memo TO "y-kawahara";
+		```
+    3. 環境変数の設定
+		.env ファイルにそれぞれ記述する
+		- 以降に記述するパスワード認証の設定が適応されていない場合、DB_PASSWORDは不要となる
+		```
+		DB_NAME="sinatra_memo"
+		DB_HOST=127.0.0.1
+		DB_USER="username"（ユーザ名）
+		DB_PASSWORD="password"（ユーザ作成時に設定したパスワード）
+		```
+    4. パスワード認証の設定
+		1. postgresSQLの設定ファイルのパスを探す
+			```sh
+			sudo -u postgres psql -d sinatra_memo
+			```
+		2. 出てきたパスから設定ファイルを開き、以下を記述
+			- コメントアウトされた項目をコピペすると記述しやすい
+			- local is forの上に記述する
+			```.conf
+			# TYPE  DATABASE        USER            ADDRESS                 METHOD
+			--追加する文--
+			local  all        user-name                                    scram-sha-256
+			--追加する文--
+			# "local" is for Unix domain socket connections only
+			local   all             all                                     peer
+			```
+		3. 設定ファイルの読み込み
+			```
+			sudo systemctl reload postgresql
+			```
+	5. rubyの以下のコマンドでアクセスできる
+		```ruby
+		require 'pg'
+  		require 'dotenv'
+  		Dotenv.load
+		PG.connect(
+  			dbname: ENV["DB_NAME"],
+    		host: ENV["DB_HOST"],
+    		user: ENV["DB_USER"],
+    		password: ENV["DB_PASSWORD"]
+  		)
+		```
+- データベースの確認方法
+	-  データベースに入れる
+		```sh
+		sudo -u postgres psql -d sinatra_memo
+		```
+### メモアプリ実行中に確認したい時
+- 中身を見たいときはSELECT文（postgreSQL接続後）
+	```SQL
+	SELECT * FORM テーブル名
+	```
+
 ## 実行方法
 1. クローンする
   ```sh
-  git clone -b my-memo https://github.com/y-kawahara-gs/sinatra_memo.git （名前） 
+  git clone -b my-memo-db https://github.com/y-kawahara-gs/sinatra_memo.git （名前） 
   ```
-2. memo.rbの実行
+2. 実行前のpostgreSQL
+	- テーブルは無い状態を確認
+
+	  <img width="556" height="232" alt="image" src="https://github.com/user-attachments/assets/a5c44a73-ca12-4020-9063-6603fe7e92a1" />
+
+3. memo.rbの実行
   - bundleを使用して、memo.rbを実行
     ```sh
     bundle exec ruby memo.rb
     ```
-3. 実行画面
+4. 実行画面
 
 - ターミナル
-<img width="899" height="420" alt="image" src="https://github.com/user-attachments/assets/10c0bf72-02dc-43f0-937a-e8eba7806945" />
+
+  <img width="581" height="240" alt="image" src="https://github.com/user-attachments/assets/f7483859-d425-4887-b0a3-4a22950ae6e1" />
+
   
 - ブラウザ
   - 実行中に http://127.0.0.1:4567 にブラウザでアクセス
-<img width="678" height="354" alt="image" src="https://github.com/user-attachments/assets/f66102cf-b499-4ed6-be63-6b2aa1fb7bb3" />
+  
+	<img width="556" height="430" alt="image" src="https://github.com/user-attachments/assets/e6ed5a67-2c01-4f05-aae6-1cf4ec594927" />
+
+- 起動時にテーブルも自動で作成される
+
+	<img width="552" height="362" alt="image" src="https://github.com/user-attachments/assets/957172e9-4ecc-46fe-a82e-a118a061eddf" />
 
 ## 使い方
-- 実行した際、カレントディレクトリにJSONファイル「data.json」が作成される。
-<img width="550" height="104" alt="image" src="https://github.com/user-attachments/assets/9896053e-61e7-400b-ae24-e481a72030eb" />
 
 - 追加ボタンを押すと、内容を記述する画面に遷移する
-<img width="389" height="361" alt="image" src="https://github.com/user-attachments/assets/6c2f8efd-3b60-400c-82d9-338e35997b0e" />
+  
+	<img width="476" height="359" alt="image" src="https://github.com/user-attachments/assets/305200bd-7a85-4eaf-afdf-849676acb5a2" />
+
 
 - 記入し、保存ボタンを押すと、タイトルがリストに追加される
-<img width="365" height="282" alt="image" src="https://github.com/user-attachments/assets/abfcc229-f0bd-43f8-ab93-5ee7e65d1c40" />
+  
+	<img width="457" height="368" alt="image" src="https://github.com/user-attachments/assets/ad293ca5-dabd-4ba7-9f37-9fb935a93d23" />
+
+
+- このときPostgreSQLもデータが作成されている
+  
+	<img width="532" height="162" alt="image" src="https://github.com/user-attachments/assets/c3a33693-bd07-4a54-8a09-d9f2497c3dc4" />
+
 
 - 同様にメモを作成することができる
-<img width="328" height="356" alt="image" src="https://github.com/user-attachments/assets/33f32709-eebd-467b-9622-923f6ff93884" />
+  
+	<img width="435" height="368" alt="image" src="https://github.com/user-attachments/assets/92c88779-f1b0-4821-8a0f-ac6e2916648c" />
+
 
 - リストのタイトルをクリックすると、そのタイトルのメモの中身を見ることができる
-<img width="356" height="342" alt="image" src="https://github.com/user-attachments/assets/59121175-7bbe-4498-9c93-e8140e1e21cb" />
 
-- 変更ボタンを押すと内容を更新することができる
-<img width="339" height="357" alt="image" src="https://github.com/user-attachments/assets/92537073-fcd7-44d1-8063-e98661708cf9" />
+	<img width="394" height="343" alt="image" src="https://github.com/user-attachments/assets/4a2db30b-e3b5-4185-8573-4a3defd429be" />
 
-<img width="396" height="390" alt="image" src="https://github.com/user-attachments/assets/3b807950-deef-4f96-a119-b68a0c2d399a" />
+
+- 変更ボタンを押すと内容を更新することができ、序列は下に移動する
+
+	<img width="422" height="342" alt="image" src="https://github.com/user-attachments/assets/c2e23da3-e2b6-4d3f-9302-edbff86e3cf0" /><br>
+	
+	<img width="305" height="297" alt="image" src="https://github.com/user-attachments/assets/3965086f-7385-419b-9dac-9a121f85dfd2" /><br>
 
 - 削除ボタンを押すと、そのメモがリストから消去される
-<img width="403" height="382" alt="image" src="https://github.com/user-attachments/assets/a41b0585-ebf0-4d96-af38-38347205a7ea" />
+  
+	<img width="403" height="338" alt="image" src="https://github.com/user-attachments/assets/24af6262-2365-42f1-9b7f-d1d3b87a799e" /><br>
 
+	<img width="424" height="391" alt="image" src="https://github.com/user-attachments/assets/4527ddba-6487-4a76-8e08-c3c67d54cc94" /><br>
 
-
-
-
-
-
-
+- またそれぞれの処理でデータベースも同様に動くことが確認できる
+  
+	<img width="521" height="189" alt="image" src="https://github.com/user-attachments/assets/290f9746-984d-4462-ae37-a609a3442b05" />
