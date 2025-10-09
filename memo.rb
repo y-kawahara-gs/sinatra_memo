@@ -47,12 +47,12 @@ post '/' do
   redirect '/'
 end
 
-delete '/showmemo/*' do |id|
+delete '/showmemo/:id' do |id|
   delete_memo(id)
   redirect '/'
 end
 
-patch '/showmemo/*' do |id|
+patch '/showmemo/:id' do |id|
   update_memo(params[:title], params[:content], id)
   redirect '/'
 end
