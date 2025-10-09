@@ -4,9 +4,16 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'pg'
 require 'cgi'
+require 'dotenv'
+Dotenv.load
 
 def conn
-  @conn ||= PG.connect(dbname: 'sinatra_memo')
+  @conn ||= PG.connect(
+    dbname: ENV["DB_NAME"],
+    host: ENV["DB_HOST"],
+    user: ENV["DB_USER"],
+    password: ENV["DB_PASSWORD"]
+  )
 end
 
 configure do
