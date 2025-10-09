@@ -53,9 +53,7 @@ delete '/showmemo/*' do |id|
 end
 
 patch '/showmemo/*' do |id|
-  title = params[:title]
-  content = params[:content]
-  update_memo(title, content, id)
+  update_memo(params[:title], params[:content], id)
   redirect '/'
 end
 
