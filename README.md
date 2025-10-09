@@ -7,7 +7,8 @@
   - bundler
   - sinatra
   - sinatra-contrib
-  - cgi 
+  - cgi
+  - dotenv
   - rackup
   - puma
 
@@ -49,10 +50,46 @@ https://computingforgeeks.com/how-to-install-postgresql-16-on-debian/
 		```SQL
 		postgres=# GRANT ALL PRIVATES ON DATABASE sinatra_memo TO "y-kawahara";
 		```
-	3. rubyの以下のコマンドでアクセスできる
+    3. 環境変数の設定
+		.env ファイルにそれぞれ記述する
+		- 以降に記述するパスワード認証の設定が適応されていない場合、DB_PASSWORDは不要となる
+		```
+		DB_NAME="sinatra_memo"
+		DB_HOST=127.0.0.1
+		DB_USER="username"（ユーザ名）
+		DB_PASSWORD="password"（ユーザ作成時に設定したパスワード）
+		```
+    4. パスワード認証の設定
+		1. postgresSQLの設定ファイルのパスを探す
+			```sh
+			sudo -u postgres psql -d sinatra_memo
+			```
+		2. 出てきたパスから設定ファイルを開き、以下を記述
+			- コメントアウトされた項目をコピペすると記述しやすい
+			- local is forの上に記述する
+			```.conf
+			# TYPE  DATABASE        USER            ADDRESS                 METHOD
+			--追加する文--
+			local  all        user-name                                    scram-sha-256
+			--追加する文--
+			# "local" is for Unix domain socket connections only
+			local   all             all                                     peer
+			```
+		3. 設定ファイルの読み込み
+			```
+			sudo systemctl reload postgresql
+			```
+	5. rubyの以下のコマンドでアクセスできる
 		```ruby
 		require 'pg'
-		PG.connect(dbname: 'sinatra_memo')
+  		require 'dotenv'
+  		Dotenv.load
+		PG.connect(
+  			dbname: ENV["DB_NAME"],
+    		host: ENV["DB_HOST"],
+    		user: ENV["DB_USER"],
+    		password: ENV["DB_PASSWORD"]
+  		)
 		```
 - データベースの確認方法
 	-  データベースに入れる
