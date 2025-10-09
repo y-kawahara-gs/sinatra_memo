@@ -1,11 +1,11 @@
 <div>
-  <form action="/showmemo/<%= @id %>" method="POST">
+  <form action="/showmemo/<%= @memo[0] %>" method="POST">
     <input type="hidden" name="_method" value="PATCH">
     <div>
-      <input type="text" name="title" value="<%= @title %>">
+      <input type="text" name="title" value="<%= @memo[1] %>">
     </div>
     <div>
-      <textarea name="content" rows="5"><%= @content %></textarea>
+      <textarea name="content" rows="5"><%= @memo[2] %></textarea>
     </div>
     <div>
       <input type="submit" value="変更">

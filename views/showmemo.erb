@@ -1,8 +1,8 @@
 <div>
-  <p><%= CGI.escapeHTML(@title) %></p>
-  <p><%= CGI.escapeHTML(@content) %></p>
-  <input type="button" onclick="location.href='/editmemo/<%= @id %>'" value="変更">
-  <form action="/showmemo/<%= @id %>" method="POST">
+  <p><%= CGI.escapeHTML(@memo[1]) %></p>
+  <p><%= CGI.escapeHTML(@memo[2]) %></p>
+  <input type="button" onclick="location.href='/editmemo/<%= @memo[0] %>'" value="変更">
+  <form action="/showmemo/<%= @memo[0] %>" method="POST">
     <div>
       <input type="hidden" name="_method" value="DELETE">
       <input type="submit" value="削除">

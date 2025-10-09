@@ -60,8 +60,7 @@ patch '/showmemo/*' do |id|
 end
 
 get '/showmemo/:id' do |id|
-  memo = get_memo(id)
-  @id, @title, @content = memo
+  @memo = get_memo(id)
   erb :showmemo
 end
 
@@ -70,7 +69,6 @@ get '/newmemo' do
 end
 
 get '/editmemo/:id' do |id|
-  memo = get_memo(id)
-  @id, @title, @content = memo
+  @memo = get_memo(id)
   erb :editmemo
 end
